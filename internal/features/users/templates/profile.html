@@ -1,0 +1,47 @@
+{{define "head"}}
+<link rel="stylesheet" href="/static/users/style.css">
+<script src="https://unpkg.com/htmx.org@1.9.9"></script>
+{{end}}
+
+{{define "title"}}Profile{{end}}
+
+{{define "content"}}
+<div class="card mt-5">
+    <div class="card-body">
+        <h2 class="card-title">Profile</h2>
+
+        <!-- Basic info -->
+        <div class="mt-4">
+            <div class="mb-3">
+                <label class="fw-bold">Name:</label>
+                <p>{{.Data.User.Name}}</p>
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold">Email:</label>
+                <p>{{.Data.User.Email}}</p>
+            </div>
+        </div>
+
+        <!-- Additional info section -->
+        <div id="profile-info">
+            <!-- This will be replaced by HTMX -->
+        </div>
+
+        <!-- Add info button -->
+        <button class="btn btn-secondary" hx-get="/profile/info/show" hx-target="#profile-info" hx-swap="innerHTML">
+            Show Info
+        </button>
+
+        <!-- Add info button -->
+        <button class="btn btn-secondary" hx-get="/profile/info/add" hx-target="#profile-info" hx-swap="innerHTML">
+            Add More Info
+        </button>
+
+        <!-- Logout form -->
+        <form method="POST" action="/logout" class="mt-4">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+</div>
+{{end}}
+{{define "scripts"}}{{end}}
