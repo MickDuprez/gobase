@@ -1,0 +1,31 @@
+{{define "title"}}Login{{end}}
+
+{{define "head"}}
+<link rel="stylesheet" href="/static/users/style.css">
+{{end}}
+
+{{define "content"}}
+<div class="card mt-5">
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4">Login</h2>
+        {{if .Error}}
+        <div class="alert alert-danger">{{.Error}}</div>
+        {{end}}
+        <form method="POST" action="/login">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="/register">Need an account? Register here</a>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "scripts"}}{{end}}
