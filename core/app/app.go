@@ -92,6 +92,10 @@ func (app *Application) RenderPartial(w http.ResponseWriter, r *http.Request, fe
 	return app.templates.RenderPartial(w, r, feature, partial, data)
 }
 
+func (app *Application) RegisterHelperFunc(name string, fn interface{}) {
+	app.templates.RegisterHelperFunc(name, fn)
+}
+
 func (app *Application) RegisterFeature(f interfaces.Feature) error {
 	// Register feature's templates
 	if err := app.templates.RegisterFeature(f.Name, f.Path, f.NavItems...); err != nil {

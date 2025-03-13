@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/MickDuprez/gobase/core/app"
 	"github.com/MickDuprez/gobase/core/config"
@@ -12,6 +13,11 @@ import (
 	"github.com/MickDuprez/gobase/examples/features/home"
 	"github.com/MickDuprez/gobase/examples/features/users"
 )
+
+// create a helper func for html templates
+func split(input, seperator string) []string {
+	return strings.Split(input, seperator)
+}
 
 func main() {
 	// for core framework development we need to set main directory to 'examples'
@@ -31,6 +37,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// register helper functions before we add any features
+	app.RegisterHelperFunc("split", split)
 
 	// Register features
 	if err := app.RegisterFeature(home.New()); err != nil {
