@@ -17,6 +17,7 @@ type Manager struct {
 	pageTemplates    map[string]*template.Template
 	partialTemplates map[string]*template.Template
 	navItems         []interfaces.NavItem
+	helperFuncs      template.FuncMap
 }
 
 func New() (*Manager, error) {
@@ -24,7 +25,12 @@ func New() (*Manager, error) {
 		pageTemplates:    make(map[string]*template.Template),
 		partialTemplates: make(map[string]*template.Template),
 		navItems:         make([]interfaces.NavItem, 0),
+		helperFuncs:      make(template.FuncMap),
 	}, nil
+}
+
+func (m *Manager) RegisterHelperFunc(name string, fn interface{}) {
+	m.helperFuncs[name] = fn
 }
 
 func (m *Manager) RegisterFeature(name, path string, navItems ...interfaces.NavItem) error {
@@ -42,8 +48,11 @@ func (m *Manager) RegisterFeature(name, path string, navItems ...interfaces.NavI
 		}
 		log.Printf("  Processing: %s", pageName)
 
+		// create template and add helperFuncs
+		ts := template.New("base").Funcs(m.helperFuncs)
+
 		// Start with base template
-		ts, err := template.ParseFiles("templates/layouts/base.html")
+		ts, err = ts.ParseFiles("templates/layouts/base.html")
 		if err != nil {
 			return fmt.Errorf("failed to parse base template: %w", err)
 		}
@@ -82,8 +91,9 @@ func (m *Manager) RegisterFeature(name, path string, navItems ...interfaces.NavI
 		if len(partials) == 0 {
 			log.Printf("Partials directory exists but no .html files found for feature %s", name)
 		} else {
-			// Parse all partials for this feature
-			ts, err := template.ParseFiles(partials...)
+			// Parse all partials for this feature with helper funcs
+			ts := template.New("partials").Funcs(m.helperFuncs)
+			ts, err := ts.ParseFiles(partials...)
 			if err != nil {
 				return fmt.Errorf("failed to parse partial templates: %w", err)
 			}
