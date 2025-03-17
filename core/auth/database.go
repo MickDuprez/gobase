@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,6 +12,20 @@ import (
 
 type AuthDB struct {
 	db *sql.DB
+}
+
+func (a *AuthDB) SaveSession(session *Session) error {
+	// Convert data to JSON for storage
+	data, err := json.Marshal(session.Data)
+	if err != nil {
+		return err
+	}
+
+	_, err = a.db.Exec(
+		`UPDATE sessions SET expires_at = ?, data = ? WHERE id = ?`,
+		session.ExpiresAt, string(data), session.ID,
+	)
+	return err
 }
 
 func NewAuthDB() (*AuthDB, error) {

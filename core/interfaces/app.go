@@ -15,6 +15,12 @@ type App interface {
 	Auth() *auth.AuthDB
 	RequireAuth(next http.HandlerFunc) http.HandlerFunc
 	DB() *database.DB
+
+	// Session helpers
+	SessionSetValue(r *http.Request, key string, value interface{}) error
+	SessionGetValue(r *http.Request, key string) (interface{}, bool)
+	SessionGetString(r *http.Request, key string) (string, bool)
+	SessionGetInt(r *http.Request, key string) (int64, bool)
 }
 
 type Feature struct {

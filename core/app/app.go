@@ -23,6 +23,74 @@ type Application struct {
 	db             *database.DB
 }
 
+func (app *Application) SessionSetValue(r *http.Request, key string, value interface{}) error {
+	cookie, err := r.Cookie("session_id")
+	if err != nil {
+		return fmt.Errorf("no session found: %w", err)
+	}
+
+	session, err := app.auth.GetSession(cookie.Value)
+	if err != nil {
+		return fmt.Errorf("failed to get session: %w", err)
+	}
+
+	session.SetValue(key, value)
+	return app.auth.SaveSession(session)
+}
+
+func (app *Application) SessionGetValue(r *http.Request, key string) (interface{}, bool) {
+	cookie, err := r.Cookie("session_id")
+	if err != nil {
+		return nil, false
+	}
+
+	session, err := app.auth.GetSession(cookie.Value)
+	if err != nil {
+		return nil, false
+	}
+
+	val := session.GetValue(key)
+	return val, val != nil
+}
+
+func (app *Application) SessionGetString(r *http.Request, key string) (string, bool) {
+	val, ok := app.SessionGetValue(r, key)
+	if !ok {
+		return "", false
+	}
+
+	str, ok := val.(string)
+	return str, ok
+}
+
+func (app *Application) SessionGetInt(r *http.Request, key string) (int64, bool) {
+	val, ok := app.SessionGetValue(r, key)
+	if !ok {
+		return 0, false
+	}
+
+	switch v := val.(type) {
+	case int64:
+		return v, true
+	case float64:
+		return int64(v), true
+	case int:
+		return int64(v), true
+	default:
+		return 0, false
+	}
+}
+
+func (app *Application) SessionGetMap(r *http.Request, key string) (map[string]interface{}, bool) {
+	val, ok := app.SessionGetValue(r, key)
+	if !ok {
+		return nil, false
+	}
+
+	m, ok := val.(map[string]interface{})
+	return m, ok
+}
+
 func (app *Application) DB() *database.DB {
 	return app.db
 }

@@ -16,6 +16,48 @@ type Session struct {
 	Data      map[string]interface{}
 }
 
+// Helper methods for working with session data
+func (s *Session) SetValue(key string, value interface{}) {
+	if s.Data == nil {
+		s.Data = make(map[string]interface{})
+	}
+	s.Data[key] = value
+}
+
+func (s *Session) GetValue(key string) interface{} {
+	if s.Data == nil {
+		return nil
+	}
+	return s.Data[key]
+}
+
+func (s *Session) GetInt(key string) (int64, bool) {
+	val := s.GetValue(key)
+	if val == nil {
+		return 0, false
+	}
+
+	switch v := val.(type) {
+	case int64:
+		return v, true
+	case float64:
+		return int64(v), true
+	case int:
+		return int64(v), true
+	default:
+		return 0, false
+	}
+}
+
+func (s *Session) GetString(key string) (string, bool) {
+	val := s.GetValue(key)
+	if val == nil {
+		return "", false
+	}
+	str, ok := val.(string)
+	return str, ok
+}
+
 func generateSessionID() (string, error) {
 	b := make([]byte, 32)
 	if _, err := rand.Read(b); err != nil {
