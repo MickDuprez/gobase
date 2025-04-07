@@ -12,9 +12,15 @@ func New() interfaces.Feature {
 		Path: "features/home",
 		NavItems: []interfaces.NavItem{
 			{
-				Title:    "Home",
-				URL:      "/",
+				Title:    "Main",
 				Priority: 0,
+				SubItems: []interfaces.NavItem{
+					{Title: "Home", URL: "/"},
+					{Title: "Overview", URL: "/overview"},
+					{Title: "Stats", URL: "/stats"},
+					{IsDivider: true},
+					{Title: "Settings", URL: "/settings"},
+				},
 			},
 		},
 		Routes: setupRoutes,

@@ -8,14 +8,19 @@ func New() interfaces.Feature {
 		Path: "features/users",
 		NavItems: []interfaces.NavItem{
 			{
-				Title:    "Profile",
-				URL:      "/profile",
-				Priority: 90,
-			},
-			{
-				Title:    "Login",
-				URL:      "/login",
-				Priority: 100,
+				Title: "Profile",
+				SubItems: []interfaces.NavItem{
+					{
+						Title:    "My Profile",
+						URL:      "/profile",
+						Priority: 90,
+					},
+					{
+						Title:    "Login",
+						URL:      "/login",
+						Priority: 100,
+					},
+				},
 			},
 		},
 		Routes: setupRoutes,

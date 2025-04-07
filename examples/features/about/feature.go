@@ -8,9 +8,14 @@ func New() interfaces.Feature {
 		Path: "features/about",
 		NavItems: []interfaces.NavItem{
 			{
-				Title:    "About",
-				URL:      "/about",
-				Priority: 10,
+				Title: "About",
+				SubItems: []interfaces.NavItem{
+					{
+						Title:    "About",
+						URL:      "/about",
+						Priority: 10,
+					},
+				},
 			},
 		},
 		Routes: setupRoutes,

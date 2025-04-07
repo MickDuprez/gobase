@@ -32,7 +32,9 @@ type Feature struct {
 }
 
 type NavItem struct {
-	Title    string
-	URL      string
-	Priority int
+	Title     string
+	URL       string // only used for sub items
+	Priority  int
+	SubItems  []NavItem // list of navigation links that use the URL field
+	IsDivider bool      // optional marker for a divider
 }

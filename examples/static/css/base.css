@@ -38,3 +38,7 @@ body {
     color: #007bff;
     font-weight: 500;
 }
+
+.nav-link.dropdown-toggle::after {
+    display: none;
+}
